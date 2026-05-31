@@ -58,6 +58,15 @@ class RetrofitTaskieRepository(private val taskDao: TaskDao) : TaskieRepository 
             val response = RetrofitTaskieInstance.apiService.getTaskDetails(token, id)
 
             if (response.isSuccessful && response.body() != null) {
+                val networkTask = response.body()!!
+                taskDao.insertTask(
+                    TaskEntity(
+                        taskId = networkTask.id,
+                        title = networkTask.title,
+                        body = networkTask.body,
+                        isSynced = true
+                    )
+                )
                 response
             } else {
                 getTaskFromLocalFallback(id)

@@ -1,6 +1,8 @@
-package com.example.dz3.zadatak2.ui.noteListScreen.components
+package com.example.dz3.zadatak2.ui.taskListScreen.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,23 +17,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.dz3.zadatak2.model.Note
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
+import com.example.dz3.zadatak2.data.model.Task
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun NoteCard(
+fun TaskCard(
     onClick: () -> Unit = {},
-    note: Note = Note("3","Shopping","milk,bread,eggs,rice", LocalDate.now())
+    onLongClick: () -> Unit = {},
+    task: Task = Task("1", "Shopping", "milk,bread,eggs,rice")
 ){
-    val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-    val formattedDate = note.date.format(dateFormatter)
-
     OutlinedCard(
-        onClick = onClick,
         modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            ),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, Color.Gray)
@@ -41,18 +42,11 @@ fun NoteCard(
                 .fillMaxWidth()
                 .padding(24.dp)
                 .defaultMinSize(minHeight = 80.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.CenterStart
         ) {
             Text(
-                text = note.title,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterStart)
-            )
-            Text(
-                text = formattedDate,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.align(Alignment.BottomEnd)
+                text = task.title,
+                style = MaterialTheme.typography.titleLarge
             )
         }
     }
